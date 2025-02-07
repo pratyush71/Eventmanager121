@@ -1,0 +1,82 @@
+/* src/pages/NewEvents.css */
+
+.new-events {
+    padding: 20px;
+    text-align: center;
+    background-color: #121212;
+    color: white;
+    min-height: 100vh;
+  }
+  
+  h1 {
+    font-size: 40px;
+    color: #fff;
+    margin-bottom: 20px;
+  }
+  
+  .filters {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .filters select {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    outline: none;
+    background-color: #282828;
+    color: white;
+  }
+  
+  .events-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .event-card {
+    background: #1f1f1f;
+    padding: 15px;
+    width: 300px;
+    border-radius: 10px;
+    text-align: left;
+    border: 1px solid #444;
+  }
+  
+  .event-card h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #ffcc00;
+  }
+  
+  .event-card p {
+    font-size: 16px;
+    margin: 5px 0;
+  }
+  
+  .buy-btn {
+    background: #ff6600;
+    color: white;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  .buy-btn:hover {
+    background: #cc5500;
+  }
+  
+  @media (max-width: 768px) {
+    .filters {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+  

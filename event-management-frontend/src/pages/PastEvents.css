@@ -1,0 +1,78 @@
+/* src/pages/PastEvents.css */
+
+.past-events {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: #0b0b0f;
+    color: #333;
+  }
+  
+  .past-events h1 {
+    font-size: 2.5rem;
+    text-align: center;
+    color: #e6d9d9;
+    margin-bottom: 20px;
+  }
+  
+  .filters {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+    gap: 20px;
+  }
+  
+
+  .filters input {
+    padding: 10px;
+    font-size: 1rem;
+    border: 2px solid #161515;
+    border-radius: 5px;
+    width: 200px;
+    transition: border 0.3s ease;
+  }
+  
+  .filters select {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    outline: none;
+    background-color: #1b1616;
+    color: white;
+  }
+  
+  .event-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  
+  .event-card {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .event-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .event-card h2 {
+    font-size: 1.8rem;
+    color: #2c3e50;
+    margin-bottom: 10px;
+  }
+  
+  .event-card p {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+  
+  .event-card strong {
+    font-weight: bold;
+    color: #2980b9;
+  }
+  
