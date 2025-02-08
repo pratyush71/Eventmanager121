@@ -58,10 +58,11 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ message: 'Invalid email or password' });
     }
     const jwtSecret = process.env.JWT_SECRET;
-
      if (!jwtSecret) {
-    throw new Error("JWT_SECRET is missing! Add it to your .env file.");
-   }
+     console.error("❌ JWT_SECRET is missing!");
+     return res.status(500).json({ message: "JWT_SECRET is missing from .env file" });
+    }
+
 
     // Generate JWT Token
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {

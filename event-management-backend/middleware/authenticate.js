@@ -1,17 +1,23 @@
-const jwt = require('jsonwebtoken');
-require('dotenv').config();
+const jwt = require("jsonwebtoken");
 
-const authenticate = (req, res, next) => {
-  const token = req.header('Authorization')?.replace('Bearer ', '');
-  if (!token) return res.status(401).json({ message: 'Access denied, no token provided' });
+module.exports = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    console.log("Authorization Header:", authHeader); // Log header
 
-  try {
-    const decoded = jwt.verify(token, process.env.SECRET_KEY);
-    req.userId = decoded.userId; // Add the decoded user ID to the request
-    next();
-  } catch (err) {
-    res.status(400).json({ message: 'Invalid token' });
-  }
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        return res.status(401).json({ message: "No token provided" });
+    }
+
+    const token = authHeader.split(" ")[1]; // Extract token
+    console.log("Extracted Token:", token); // Log extracted token
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET); // Ensure secret key matches
+        console.log("Decoded Token:", decoded); // Log decoded payload
+        req.user = decoded;
+        next();
+    } catch (error) {
+        console.error("JWT Verification Error:", error.message);
+        return res.status(401).json({ message: "Invalid token" });
+    }
 };
-
-module.exports = authenticate;
