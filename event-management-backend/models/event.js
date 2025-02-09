@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const eventSchema = new mongoose.Schema({
-  title: {
+  name: {
     type: String,
     required: true,
   },
@@ -12,15 +12,14 @@ const eventSchema = new mongoose.Schema({
   category: {
     type: String,
     required: true,
-    enum: ["Music Concerts", "Cultural Festivals", "Religious Events", "Sports", "Tech Conferences", "Other"],
+    enum: ["Music", "Sports", "Technology", "Art"], 
   },
   date: {
     type: Date,
     required: true,
   },
-  createdBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+  time: {
+    type: String, // Ensure `time` is stored
     required: true,
   },
   createdAt: {
@@ -30,5 +29,4 @@ const eventSchema = new mongoose.Schema({
 });
 
 const Event = mongoose.model("Event", eventSchema);
-
 module.exports = Event;

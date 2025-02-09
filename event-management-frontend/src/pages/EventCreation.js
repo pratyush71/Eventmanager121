@@ -1,17 +1,18 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const EventCreation = () => {
   const navigate = useNavigate();
 
-  // State to hold form data
   const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    date: '',
-    time: '',
-    category: 'Music', // Default category
+    name: "",
+    description: "",
+    date: "",
+    time: "",
+    category: "Music",
   });
+
+  const [error, setError] = useState(null); // Store API error messages
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,80 +22,51 @@ const EventCreation = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle event creation logic here (e.g., send data to backend or display)
-    console.log('Event Created:', formData);
 
-    // Redirect back to dashboard or another page
-    navigate('/event-dashboard');
+    // Frontend Validation
+    if (!formData.name || !formData.description || !formData.date || !formData.time) {
+      setError("All fields are required.");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:5000/api/events/create-event", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+    
+      const text = await response.text(); // Convert to text first
+      console.log("Raw Response:", text);
+    
+      const data = JSON.parse(text); // Try parsing JSON manually
+      if (!response.ok) throw new Error(data.message || "Something went wrong.");
+    
+      alert("Event created successfully!");
+      navigate("/event-dashboard");
+    } catch (err) {
+      console.error("Error:", err.message);
+      setError(err.message);
+    }
+    
   };
 
   return (
-    <div style={{ padding: '50px 20px', minHeight: '100vh', backgroundColor: '#f9fafb', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#333', backgroundImage: 'linear-gradient(135deg, #6fa3ef, #7b9fbb)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
-      <h1 style={{ fontSize: '2.5rem', marginBottom: '30px', fontWeight: 'bold', color: '#2c3e50', textShadow: '2px 2px 5px rgba(0, 0, 0, 0.1)' }}>Create a New Event</h1>
-      
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', width: '100%', maxWidth: '600px', backgroundColor: '#fff', padding: '30px', borderRadius: '10px', boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)' }}>
-        <div style={{ marginBottom: '20px' }}>
-          <label htmlFor="name" style={{ fontSize: '1.1rem', marginBottom: '8px', fontWeight: '500', color: '#333' }}>Event Name:</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            style={{ width: '100%', padding: '12px', fontSize: '1rem', borderRadius: '8px', border: '1px solid #ddd', backgroundColor: '#f8f8f8', outline: 'none', transition: 'all 0.3s ease' }}
-            required
-          />
-        </div>
+    <div style={styles.container}>
+      <h1 style={styles.heading}>Create a New Event</h1>
+      <form onSubmit={handleSubmit} style={styles.form}>
+        {error && <p style={styles.error}>{error}</p>} {/* Show error messages */}
 
-        <div style={{ marginBottom: '20px' }}>
-          <label htmlFor="description" style={{ fontSize: '1.1rem', marginBottom: '8px', fontWeight: '500', color: '#333' }}>Event Description:</label>
-          <textarea
-            id="description"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            style={{ width: '100%', padding: '12px', fontSize: '1rem', borderRadius: '8px', border: '1px solid #ddd', backgroundColor: '#f8f8f8', outline: 'none', height: '150px' }}
-            required
-          />
-        </div>
+        <InputField label="Event Name:" type="text" name="name" value={formData.name} handleChange={handleChange} />
+        <TextareaField label="Event Description:" name="description" value={formData.description} handleChange={handleChange} />
+        <InputField label="Event Date:" type="date" name="date" value={formData.date} handleChange={handleChange} />
+        <InputField label="Event Time:" type="time" name="time" value={formData.time} handleChange={handleChange} />
 
-        <div style={{ marginBottom: '20px' }}>
-          <label htmlFor="date" style={{ fontSize: '1.1rem', marginBottom: '8px', fontWeight: '500', color: '#333' }}>Event Date:</label>
-          <input
-            type="date"
-            id="date"
-            name="date"
-            value={formData.date}
-            onChange={handleChange}
-            style={{ width: '100%', padding: '12px', fontSize: '1rem', borderRadius: '8px', border: '1px solid #ddd', backgroundColor: '#f8f8f8', outline: 'none', transition: 'all 0.3s ease' }}
-            required
-          />
-        </div>
-
-        <div style={{ marginBottom: '20px' }}>
-          <label htmlFor="time" style={{ fontSize: '1.1rem', marginBottom: '8px', fontWeight: '500', color: '#333' }}>Event Time:</label>
-          <input
-            type="time"
-            id="time"
-            name="time"
-            value={formData.time}
-            onChange={handleChange}
-            style={{ width: '100%', padding: '12px', fontSize: '1rem', borderRadius: '8px', border: '1px solid #ddd', backgroundColor: '#f8f8f8', outline: 'none', transition: 'all 0.3s ease' }}
-            required
-          />
-        </div>
-
-        <div style={{ marginBottom: '20px' }}>
-          <label htmlFor="category" style={{ fontSize: '1.1rem', marginBottom: '8px', fontWeight: '500', color: '#333' }}>Event Category:</label>
-          <select
-            id="category"
-            name="category"
-            value={formData.category}
-            onChange={handleChange}
-            style={{ width: '100%', padding: '12px', fontSize: '1rem', borderRadius: '8px', border: '1px solid #ddd', backgroundColor: '#f8f8f8', outline: 'none' }}
-          >
+        <div style={styles.field}>
+          <label style={styles.label}>Event Category:</label>
+          <select name="category" value={formData.category} onChange={handleChange} style={styles.input}>
             <option value="Music">Music</option>
             <option value="Technology">Technology</option>
             <option value="Sports">Sports</option>
@@ -102,10 +74,37 @@ const EventCreation = () => {
           </select>
         </div>
 
-        <button type="submit" style={{ padding: '14px 28px', fontSize: '1.2rem', backgroundColor: '#2980b9', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer', transition: 'background-color 0.3s ease' }}>Create Event</button>
+        <button type="submit" style={styles.button}>Create Event</button>
       </form>
     </div>
   );
 };
+
+// Reusable Components for Inputs
+const InputField = ({ label, type, name, value, handleChange }) => (
+  <div style={styles.field}>
+    <label style={styles.label}>{label}</label>
+    <input type={type} name={name} value={value} onChange={handleChange} style={styles.input} required />
+  </div>
+);
+
+const TextareaField = ({ label, name, value, handleChange }) => (
+  <div style={styles.field}>
+    <label style={styles.label}>{label}</label>
+    <textarea name={name} value={value} onChange={handleChange} style={{ ...styles.input, height: "120px" }} required />
+  </div>
+);
+
+// Styles
+const styles = {
+  container: { padding: "50px 20px", minHeight: "100vh", backgroundColor: "#f9fafb", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", color: "#333" },
+  heading: { fontSize: "2.5rem", marginBottom: "30px", fontWeight: "bold", color: "#2c3e50" },
+  form: { display: "flex", flexDirection: "column", width: "100%", maxWidth: "600px", backgroundColor: "#fff", padding: "30px", borderRadius: "10px", boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)" },
+  field: { marginBottom: "20px" },
+  label: { fontSize: "1.1rem", marginBottom: "8px", fontWeight: "500", color: "#333" },
+  input: { width: "100%", padding: "12px", fontSize: "1rem", borderRadius: "8px", border: "1px solid #ddd", backgroundColor: "#f8f8f8", outline: "none" },
+  button: { padding: "14px 28px", fontSize: "1.2rem", backgroundColor: "#2980b9", color: "#fff", border: "none", borderRadius: "5px", cursor: "pointer" },
+  error: { color: "red", fontSize: "1rem", marginBottom: "15px" },
+}; 
 
 export default EventCreation;
